@@ -17,7 +17,7 @@ public class Produit {
     private String nom;
     private String type;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Categorie categorie;
 
 }

@@ -1,6 +1,7 @@
 package ml.pic.tech.security.token.security.service;
 
 
+import ml.pic.tech.security.token.security.entity.ChangePassword;
 import ml.pic.tech.security.token.security.entity.Role;
 import ml.pic.tech.security.token.security.entity.Utilisateur;
 import ml.pic.tech.security.token.security.repository.RoleRepository;
@@ -30,14 +31,14 @@ public class AccountService {
         this.repository = repository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+
     }
 
 
     public Utilisateur addUtilisateur(Utilisateur utilisateur) {
-
-       utilisateur.setPassword(passwordEncoder
-               .encode(utilisateur.getPassword()));
-       return repository.save(utilisateur);
+        utilisateur.setPassword(passwordEncoder
+                .encode(utilisateur.getPassword()));
+        return repository.save(utilisateur);
     }
 
     public Role addRole(Role role) {
@@ -77,12 +78,15 @@ public class AccountService {
         return utilisateur;
     }
 
-    public void updatePassword(String email, String passwordNew) {
-        repository.updatePasswordByEmail(email, passwordEncoder.encode(passwordNew));
-    }
+    public void updatePassword(ChangePassword passwordNew) {
+        Utilisateur currentUtilisateur = currentUtilisateur();
 
-    public boolean passwordEncodeVerifie(String password, String encodedPassword) {
+        boolean passwordMatch = passwordEncoder
+                .matches(passwordNew.getOldPassword(), currentUtilisateur.getPassword());
+        if (passwordMatch) {
+            repository.updatePasswordByEmail(currentUtilisateur.getEmail(),
+                    passwordEncoder.encode(passwordNew.getNewPassword()));
+        }
 
-        return passwordEncoder.matches(password, encodedPassword);
     }
 }

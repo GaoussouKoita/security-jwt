@@ -1,4 +1,4 @@
-package ml.pic.tech.security.token.security.utilis;
+package ml.pic.tech.security.token.utilis;
 
 public interface JwtProperties {
 

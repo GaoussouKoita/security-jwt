@@ -3,7 +3,7 @@ package ml.pic.tech.security.token.security.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import ml.pic.tech.security.token.security.utilis.JwtProperties;
+import ml.pic.tech.security.token.utilis.JwtProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 

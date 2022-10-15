@@ -2,8 +2,7 @@ package ml.pic.tech.security.token.security.config;
 
 import ml.pic.tech.security.token.security.service.JwtTokenUtils;
 import ml.pic.tech.security.token.security.service.UserDetailsServiceImpl;
-import ml.pic.tech.security.token.security.utilis.JwtProperties;
-import org.springframework.beans.factory.annotation.Autowired;
+import ml.pic.tech.security.token.utilis.JwtProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,10 +18,14 @@ import java.io.IOException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-    @Autowired
+
     private UserDetailsServiceImpl userDetailsService;
-    @Autowired
     private JwtTokenUtils jwtTokenUtils;
+
+    public JwtRequestFilter(UserDetailsServiceImpl userDetailsService, JwtTokenUtils jwtTokenUtils) {
+        this.userDetailsService = userDetailsService;
+        this.jwtTokenUtils = jwtTokenUtils;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

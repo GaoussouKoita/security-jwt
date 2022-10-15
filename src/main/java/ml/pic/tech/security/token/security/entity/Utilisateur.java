@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -22,11 +21,10 @@ public class Utilisateur {
     private Long id;
     private String nom;
     private String prenom;
-    private String telephone;
+    private Long telephone;
     private String adresse;
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Size(min = 8, message = "Le password doit contenir au moins 8 caracteres")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)

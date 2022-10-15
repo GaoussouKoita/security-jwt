@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
+@RequestMapping(value = "/user")
 public class AuthResource {
 
     @Autowired
@@ -28,27 +29,27 @@ public class AuthResource {
     @Autowired
     private AccountService service;
 
-
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello !";
-    }
-
     @PostMapping("/authentification")
     public ResponseEntity<?> createAuthentificationToken(@RequestBody AuthentificationRequest authRequest) {
 
         authManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
         final String jwtToken = jwtTokenUtils.generateToken(userDetails);
-       return ResponseEntity.ok(new AuthentificationResponse(jwtToken));
+        return ResponseEntity.ok(new AuthentificationResponse(jwtToken));
     }
 
-    @PostMapping("/user")
-    public Utilisateur utilisateur(@RequestBody Utilisateur utilisateur){
+    @PostMapping("/")
+    public Utilisateur utilisateur(@RequestBody Utilisateur utilisateur) {
         return service.addUtilisateur(utilisateur);
     }
-    @GetMapping("/users")
+
+    @GetMapping("/")
     public List<Utilisateur> utilisateurList() {
         return service.utilisateurList();
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        service.deleteById(id);
     }
 }

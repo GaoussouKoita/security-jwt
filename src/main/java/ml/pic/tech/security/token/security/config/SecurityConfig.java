@@ -28,7 +28,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //        http.authenticationProvider(authManager());
         http.csrf().disable().
-                authorizeRequests().antMatchers("/authentification").permitAll().anyRequest().authenticated().
+                authorizeRequests().antMatchers("/user/authentification", "/v2/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars**/**").permitAll()
+                .anyRequest().authenticated().
                 and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
                 and().addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 

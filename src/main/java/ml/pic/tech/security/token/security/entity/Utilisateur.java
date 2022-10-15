@@ -29,7 +29,7 @@ public class Utilisateur {
     @Size(min = 8, message = "Le password doit contenir au moins 8 caracteres")
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
 }

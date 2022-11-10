@@ -6,6 +6,7 @@ import ml.pic.tech.security.token.security.entity.Utilisateur;
 import ml.pic.tech.security.token.security.service.AccountService;
 import ml.pic.tech.security.token.security.service.AuthService;
 import ml.pic.tech.security.token.utilis.Endpoint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +18,11 @@ import java.util.List;
 public class AuthResource {
 
 
+    @Autowired
     private AuthService authService;
+    @Autowired
     private AccountService service;
 
-    public AuthResource(AuthService authService, AccountService service) {
-        this.authService = authService;
-        this.service = service;
-    }
 
     @PostMapping(Endpoint.AUTHENTIFICATION_ENDPOINT)
     public ResponseEntity<?> createAuthentificationToken(@RequestBody AuthentificationRequest authRequest) {

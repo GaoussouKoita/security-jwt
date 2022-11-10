@@ -6,36 +6,41 @@ import ml.pic.tech.security.token.security.entity.Role;
 import ml.pic.tech.security.token.security.entity.Utilisateur;
 import ml.pic.tech.security.token.security.repository.RoleRepository;
 import ml.pic.tech.security.token.security.repository.UtilisateurRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
 @Transactional
-public class AccountService {
+public class AccountService implements UserDetailsService {
 
 
-    private final UtilisateurRepository repository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
-
-
-    public AccountService(UtilisateurRepository repository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
-        this.repository = repository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-
-    }
+    @Autowired
+    private UtilisateurRepository repository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     public Utilisateur addUtilisateur(Utilisateur utilisateur) {
+
         utilisateur.setPassword(passwordEncoder
                 .encode(utilisateur.getPassword()));
         return repository.save(utilisateur);
@@ -48,6 +53,10 @@ public class AccountService {
 
     public Utilisateur findByUsername(String email) {
         return repository.findByEmail(email);
+    }
+
+    private Role findByRoleName(String roleName) {
+        return roleRepository.findByRoleName(roleName);
     }
 
     public List<Utilisateur> utilisateurList() {
@@ -88,5 +97,15 @@ public class AccountService {
                     passwordEncoder.encode(passwordNew.getNewPassword()));
         }
 
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Utilisateur utilisateur = findByUsername(username);
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        utilisateur.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+        });
+        return new User(utilisateur.getEmail(), utilisateur.getPassword(), authorities);
     }
 }
